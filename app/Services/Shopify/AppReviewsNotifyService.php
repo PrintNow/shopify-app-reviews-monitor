@@ -2,6 +2,7 @@
 
 namespace App\Services\Shopify;
 
+use App\Lib\Shopify\AppName;
 use Guanguans\Notify\Factory;
 use App\Models\ShopifyAppReview;
 
@@ -13,13 +14,15 @@ class AppReviewsNotifyService
 
     public function handle()
     {
-        $date = "**Edited at**: {$this->shopifyAppReview->edited_at}";
+        $date = "**📅 Edited at**: {$this->shopifyAppReview->edited_at}";
         if ($this->shopifyAppReview->posted_at !== null) {
-            $date = "**Posted at**: {$this->shopifyAppReview->posted_at}";
+            $date = "**📅 Posted at**: {$this->shopifyAppReview->posted_at}";
         }
         $discoverTime = $this->shopifyAppReview->created_at
             ?->setTimezone('Asia/Shanghai')
             ->format('Y-m-d H:i:s') ?? '';
+
+        $appName = AppName::name($this->shopifyAppReview->slug);
 
         Factory::dingTalk()
             ->setToken(config('notify.dingtalk.token'))
@@ -27,18 +30,18 @@ class AppReviewsNotifyService
             ->setMessage(new \Guanguans\Notify\Messages\DingTalk\MarkdownMessage([
                 'title' => "{$this->shopifyAppReview->rating}-star & {$this->shopifyAppReview->slug} | {$this->shopifyAppReview->name}",
                 'text' => <<<MARKDOWN
-                            ## {$this->shopifyAppReview->slug}
+                            ##  {$appName}
                             ---
-                            #### **Customer**: {$this->shopifyAppReview->name}
-                            #### **Reviews rating**: {$this->shopifyAppReview->rating}-star
+                            #### **👓 Customer**: {$this->shopifyAppReview->name}
+                            #### **✨ Rating**: {$this->shopifyAppReview->rating}-star
                             #### {$date}
                             ---
-                            #### **Comment**: {$this->shopifyAppReview->comment}
-                            #### **Discover time**: {$discoverTime}
+                            #### **🔍 Discover time**: {$discoverTime}
+                            #### **📝 Comment**: {$this->shopifyAppReview->comment}
 
                             ---
 
-                            [Click to view the reviews page](https://apps.shopify.com/{$this->shopifyAppReview->slug})
+                            [🧭 Click to view the reviews page](https://apps.shopify.com/{$this->shopifyAppReview->slug})
                           MARKDOWN
                 ,
             ]))
