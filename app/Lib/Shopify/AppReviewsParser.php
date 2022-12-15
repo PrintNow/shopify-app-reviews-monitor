@@ -90,7 +90,7 @@ class AppReviewsParser
      */
     private function getComment(): string
     {
-        $selector = '.truncate-content-copy > p';
+        $selector = 'div[data-truncate-content-copy] > p';
         $value = Selector::select($this->_selectedReviewHtml, $selector, 'css');
 
         $splitText = explode("<br/>", is_array($value) ? implode("\n\n", $value) : $value);
