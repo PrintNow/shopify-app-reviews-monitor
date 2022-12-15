@@ -34,13 +34,11 @@ class AppReviewsNotifyService
                             ---
                             #### **👓 Customer**: {$this->shopifyAppReview->name}
                             #### **✨ Rating**: {$this->shopifyAppReview->rating}-star
-                            #### {$date}
-                            ---
                             #### **🔍 Discover time**: {$discoverTime}
-                            #### **📝 Comment**: {$this->shopifyAppReview->comment}
-
                             ---
-
+                            #### {$date}
+                            #### **📝 Comment**: {$this->shopifyAppReview->comment}
+                            ---
                             [🧭 Click to view the reviews page](https://apps.shopify.com/{$this->shopifyAppReview->slug})
                           MARKDOWN
                 ,
